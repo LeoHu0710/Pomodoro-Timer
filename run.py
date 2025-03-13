@@ -40,6 +40,10 @@ class PomodoroTimer:
         self.resume_button = tk.Button(self.root, text="繼續", command=self.resume, state="disabled")
         self.resume_button.pack(pady=5)
 
+        # 增加重製按鈕
+        self.reset_button = tk.Button(self.root, text="重製", command=self.reset, state="disabled")
+        self.reset_button.pack(pady=5)
+
         # 添加顯示當前狀態和倒數時間的標籤
         self.status_frame = tk.Frame(self.root, bd=2, relief=tk.RIDGE, padx=20, pady=10)
         self.status_frame.pack(pady=10, fill=tk.X, padx=10)
@@ -76,6 +80,7 @@ class PomodoroTimer:
                 # 禁用開始按鈕，啟用暫停按鈕
                 self.submit_button.config(state="disabled")
                 self.pause_button.config(state="normal")
+                self.reset_button.config(state="normal")  # 啟用重製按鈕
                 
                 self.timer_thread = threading.Thread(target=self.run_timer)
                 self.timer_thread.daemon = True  # 設定為守護執行緒
@@ -192,6 +197,19 @@ class PomodoroTimer:
         # 啟用輸入框
         self.work_time_entry.config(state="normal")
         self.break_time_entry.config(state="normal")
+
+    def reset(self):
+        """重製番茄鐘"""
+        self.stop()
+        self.work_time_entry.config(state="normal")
+        self.break_time_entry.config(state="normal")
+        self.submit_button.config(state="normal")
+        self.reset_button.config(state="disabled")
+        self.mode_label.config(text="準備開始", fg="black")
+        self.time_label.config(text="00:00")
+        self.status_frame.config(bg="#F0F0F0")
+        self.time_label.config(bg="#F0F0F0")
+        self.mode_label.config(bg="#F0F0F0")
 
     def on_close(self):
         """處理視窗關閉事件"""
